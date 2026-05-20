@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elastifun - Papan Peringkat Tertinggi</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          rgba(10, 25, 60, 0.95),
+          rgba(5, 15, 40, 0.98)
+        );
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .leaderboard-container {
+        background: rgba(14, 34, 71, 0.95);
+        max-width: 600px;
+        width: 100%;
+        padding: 35px 25px;
+        border-radius: 25px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 2px solid #ffc94a;
+      }
+      .trophy-icon {
+        font-size: 60px;
+        margin-bottom: 10px;
+        animation: bounce 2s infinite;
+      }
+      h2 {
+        color: #ffc94a;
+        font-size: 26px;
+        margin-bottom: 5px;
+        letter-spacing: 1px;
+      }
+      .subtitle {
+        color: #aaa;
+        font-size: 14px;
+        margin-bottom: 25px;
+      }
+      /* Gaya Tabel Peringkat */
+      .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        text-align: left;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .leaderboard-table th {
+        background: #112852;
+        color: #ffc94a;
+        padding: 12px 15px;
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      .leaderboard-table td {
+        padding: 14px 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 15px;
+      }
+      .leaderboard-table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      /* Desain Badge Juara */
+      .rank-badge {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 13px;
+      }
+      .rank-1 {
+        background: #ffd700;
+        color: #000;
+      }
+      .rank-2 {
+        background: #c0c0c0;
+        color: #000;
+      }
+      .rank-3 {
+        background: #cd7f32;
+        color: #fff;
+      }
+      .rank-other {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+
+      /* Sesi Skor Pemain Aktif */
+      .current-player-box {
+        background: rgba(40, 167, 69, 0.1);
+        border: 1px dashed #28a745;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      /* 🏆 TOMBOL NAVIGASI AMBIL SERTIFIKAT */
+      .cert-btn {
+        background: linear-gradient(45deg, #ff9f43, #ff5252);
+        color: white;
+        border: none;
+        padding: 16px 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 12px;
+        cursor: pointer;
+        width: 100%;
+        transition: 0.3s ease;
+        box-shadow: 0 5px 20px rgba(255, 82, 82, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+      .cert-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 82, 82, 0.6);
+        background: linear-gradient(45deg, #ffaa54, #ff6363);
+      }
+      .cert-btn:active {
+        transform: translateY(-1px);
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="leaderboard-container">
+      <div class="trophy-icon">🏆</div>
+      <h2>PAPAN PERINGKAT</h2>
+      <div class="subtitle">Materi Elastisitas & Permintaan/Penawaran</div>
+
+      <div class="current-player-box">
+        <div style="text-align: left">
+          <span style="font-size: 12px; color: #aaa; display: block"
+            >SKOR KAMU</span
+          >
+          <b id="currentPlayerName" style="color: #ffc94a">Siswa</b>
+        </div>
+        <div
+          style="font-size: 20px; font-weight: bold; color: #28a745"
+          id="currentPlayerScore"
+        >
+          0 Poin
+        </div>
+      </div>
+
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th style="width: 20%">Pos</th>
+            <th>Nama Siswa</th>
+            <th style="text-align: right">Skor Akhir</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardBody"></tbody>
+      </table>
+
+      <button class="cert-btn" onclick="navigasiSertifikat()">
+        🎓 Ambil Sertifikat Kelulusanmu! ➔
+      </button>
+    </div>
+
+    <script>
+      // 1. Ambil data nilai mandiri milik siswa dari localStorage
+      const namaSiswa = localStorage.getItem("namaSiswa") || "Siswa Hebat";
+      const skorCocologi = parseInt(localStorage.getItem("skorCocologi")) || 0;
+      const skorDomino = parseInt(localStorage.getItem("skorDomino")) || 0;
+      const totalSkorAkhir = skorCocologi + skorDomino;
+
+      // Tampilkan profil ringkas siswa di atas tabel
+      document.getElementById("currentPlayerName").innerText = namaSiswa;
+      document.getElementById("currentPlayerScore").innerText =
+        totalSkorAkhir + " Pts";
+
+      // 2. Data Simulasi Kompetitor Kelas
+      let daftarJuara = [
+        { nama: "Fathur Rahman", skor: 260 },
+        { nama: "Siti Aminah", skor: 235 },
+        { nama: "Rian Hidayat", skor: 190 },
+        { nama: "Putri Lestari", skor: 175 },
+      ];
+
+      // Masukkan data siswa aktif ke dalam daftar juara tiruan
+      daftarJuara.push({ nama: namaSiswa + " (Kamu)", skor: totalSkorAkhir });
+
+      // Urutkan peringkat berdasarkan skor tertinggi ke terendah
+      daftarJuara.sort((a, b) => b.skor - a.skor);
+
+      // Render data ke dalam tabel HTML
+      const tbody = document.getElementById("leaderboardBody");
+      tbody.innerHTML = "";
+
+      daftarJuara.forEach((peserta, index) => {
+        const posisi = index + 1;
+        let badgeClass = "rank-other";
+
+        if (posisi === 1) badgeClass = "rank-1";
+        else if (posisi === 2) badgeClass = "rank-2";
+        else if (posisi === 3) badgeClass = "rank-3";
+
+        const row = document.createElement("tr");
+        // Beri highlight warna hijau jika baris itu milik si siswa sendiri
+        if (peserta.nama.includes("(Kamu)")) {
+          row.style.background = "rgba(40, 167, 69, 0.15)";
+        }
+
+        row.innerHTML = `
+                <td><span class="rank-badge ${badgeClass}">${posisi}</span></td>
+                <td><b>${peserta.nama}</b></td>
+                <td style="text-align: right; font-weight: bold; color: #ffc94a;">${peserta.skor}</td>
+            `;
+        tbody.appendChild(row);
+      });
+
+      // 3. FUNGSI NAVIGASI PINDAH KE HALAMAN SERTIFIKAT
+      function navigasiSertifikat() {
+        // Mengarahkan siswa ke file cetak sertifikat
+        window.location.href = "sertifikat.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #08152f;
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 25px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1000px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 30px;
+        padding: 30px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+      }
+
+      .badge {
+        background: #e01447;
+        display: inline-block;
+        padding: 10px 24px;
+        border-radius: 40px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        color: #ffc94a;
+      }
+
+      .sub {
+        color: #ddd;
+        margin-bottom: 25px;
+      }
+
+      video {
+        width: 100%;
+        border-radius: 20px;
+        background: black;
+      }
+
+      .bottom-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border: none;
+        padding: 14px 24px;
+        border-radius: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+      }
+
+      .prev {
+        background: #27467a;
+        color: white;
+      }
+
+      .back {
+        background: #2a7c4b;
+        color: white;
+      }
+
+      .next {
+        background: #d89b14;
+        color: white;
+      }
+
+      .end-buttons {
+        display: none;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 1024px) {
+        .container {
+          max-width: 90%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="badge">🎥 VIDEO PEMBELAJARAN</div>
+
+      <h1>Video Rumus Elastisitas</h1>
+
+      <div class="sub">Tonton Video Pembelajaran Sampai Selesai Ya.....😊</div>
+
+      <video id="VideoMateri" controls>
+        <source src="videomateri1.mp4.mp4" type="video/mp4" />
+      </video>
+
+      <div class="bottom-buttons">
+        <button class="btn prev" onclick="Sebelumnya()">⬅ Sebelumnya</button>
+
+        <button class="btn back" onclick="KembalikePanduan()">
+          🔄KembalikePanduan
+        </button>
+      </div>
+
+      <div class="end-buttons" id="endbuttons">
+        <button class="btn prev" onclick="Sebelumnya()">⬅ Sebelumnya</button>
+
+        <button class="btn back" onclick="KembalikePanduan()">
+          🔄KembalikePanduan
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const video = document.getElementById("videoMateri");
+
+      video.addEventListener("ended", function () {
+        document.getElementById("endbuttons").style.display = "flex";
+      });
+
+      function Sebelumnya() {
+        window.location.href = "materi1slide5.html";
+      }
+
+      function KembalikePanduan() {
+        window.location.href = "halaman2-panduan.html";
+      }
+
+      function Selanjutnya() {
+        window.location.href = "videomateri1.html";
+      }
+    </script>
+  </body>
+</html>

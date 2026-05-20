@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elastifun - Multi-HP Setup</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          rgba(10, 25, 60, 0.9),
+          rgba(10, 25, 60, 0.95)
+        );
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+        overflow-y: auto;
+      }
+
+      .setup-container {
+        background: rgba(14, 34, 71, 0.95);
+        padding: 25px 20px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        border: 2px solid #ffc94a;
+      }
+
+      h1 {
+        text-align: center;
+        color: #ffc94a;
+        margin-bottom: 5px;
+        font-size: 24px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #aaa;
+        font-size: 13px;
+        margin-bottom: 25px;
+      }
+
+      /* Tab Selector untuk memilih Buat Room atau Gabung Room */
+      .tab-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.3s;
+      }
+
+      .tab-btn.active {
+        background: #2a7c4b;
+        border-color: #ffc94a;
+      }
+
+      .form-section {
+        display: none;
+      }
+
+      .form-section.active {
+        display: block;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+        font-size: 13px;
+        color: #ffd35a;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        border-radius: 8px;
+        border: 2px solid #233b67;
+        background: #0a193c;
+        color: white;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: #ffc94a;
+      }
+
+      .btn-action {
+        width: 100%;
+        background: #d89b14;
+        color: white;
+        border: none;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: 0.2s;
+      }
+
+      .btn-action:hover {
+        background: #b5800f;
+      }
+
+      .info-box {
+        margin-top: 20px;
+        background: rgba(255, 201, 74, 0.1);
+        border-left: 4px solid #ffc94a;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        line-height: 1.5;
+        color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="setup-container">
+      <h1>🎯 ELASTIFUN ONLINE</h1>
+      <p class="subtitle">Mode Multiplayer Banyak HP (1 Kelompok 5 HP)</p>
+
+      <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('buat')">
+          👑 Buat Room Baru
+        </button>
+        <button class="tab-btn" onclick="switchTab('gabung')">
+          👥 Gabung Room
+        </button>
+      </div>
+
+      <div id="sectionBuat" class="form-section active">
+        <form onsubmit="buatRoomOnline(event)">
+          <div class="form-group">
+            <label>Nama Kelompok / Regu:</label>
+            <input
+              type="text"
+              id="namaKelompokBaru"
+              placeholder="Contoh: Kelompok Adam Smith"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Nama Kamu (Ketua):</label>
+            <input
+              type="text"
+              id="namaKetua"
+              class="nama-siswa-display"
+              readonly
+            />
+          </div>
+          <button type="submit" class="btn-action">
+            Buat Room & Dapatkan PIN ➔
+          </button>
+        </form>
+      </div>
+
+      <div id="sectionGabung" class="form-section">
+        <form onsubmit="gabungRoomOnline(event)">
+          <div class="form-group">
+            <label>Masukkan PIN Room (Dari Ketua):</label>
+            <input
+              type="number"
+              id="pinRoomInput"
+              placeholder="Contoh: 4821"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Nama Kamu (Anggota):</label>
+            <input
+              type="text"
+              id="namaAnggota"
+              class="nama-siswa-display"
+              readonly
+            />
+          </div>
+          <button type="submit" class="btn-action" style="background: #2a7c4b">
+            Masuk ke Room Game ➔
+          </button>
+        </form>
+      </div>
+
+      <div class="info-box">
+        <strong>💡 Petunjuk Sinkronisasi:</strong>
+        <p>
+          1 Ketua kelompok bertugas menekan tombol "Buat Room". Anggota kelompok
+          lainnya cukup memilih tab "Gabung Room" dan mengetikkan PIN nomor yang
+          muncul di HP ketua.
+        </p>
+      </div>
+    </div>
+
+    <script>
+    
+  // Load nama otomatis yang diinput anak saat login di index.html
+  const namaAsliSiswa = localStorage.getItem("namaSiswa") || "Siswa";
+  document.getElementById("namaKetua").value = namaAsliSiswa;
+  document.getElementById("namaAnggota").value = namaAsliSiswa;
+
+  // Fungsi ganti tab (Buat Room / Gabung Room)
+  function switchTab(mode) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
+
+    if(mode === 'buat') {
+      document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      document.getElementById('sectionBuat').classList.add('active');
+    } else {
+      document.querySelectorAll('.tab-btn')[1].classList.add('active');
+      document.getElementById('sectionGabung').classList.add('active');
+    }
+  }
+
+  // --- REVISI LOGIKA BUAT ROOM UNTUK KETUA ---
+  function buatRoomOnline(event) {
+    event.preventDefault();
+    const namaKelompok = document.getElementById("namaKelompokBaru").value.trim();
+    
+    // 1. Sistem membuat PIN 4 angka secara acak (1000 sampai 9999)
+    const pinOtomatis = Math.floor(1000 + Math.random() * 9000);
+    
+    // 2. Simpan informasi room ke memori browser sementara
+    localStorage.setItem("peranUser", "ketua");
+    localStorage.setItem("namaKelompok", namaKelompok);
+    localStorage.setItem("pinRoomActive", pinOtomatis);
+    
+    // 3. Berikan pengumuman PIN kepada Ketua agar bisa dicatat/dibagikan ke anggota
+    alert(
+      `🎉 ROOM BERHASIL DIBUAT!\n\n` +
+      `Nama Regu: ${namaKelompok}\n` +
+      `KODE PIN ROOM: ${pinOtomatis}\n\n` +
+      `Silakan bagikan angka PIN ini kepada 4 anggota kelompokmu agar mereka bisa bergabung.`
+    );
+    
+    // 4. Pindah ke halaman game utama
+    window.location.href = "gamedomino.html";
+  }
+
+  // --- LOGIKA GABUNG ROOM UNTUK ANGGOTA ---
+  function gabungRoomOnline(event) {
+    event.preventDefault();
+    const pinRoomInput = document.getElementById("pinRoomInput").value.trim();
+    
+    localStorage.setItem("peranUser", "anggota");
+    localStorage.setItem("pinRoomActive", pinRoomInput);
+
+    // Di sini nanti sistem Firebase akan otomatis mencocokkan PIN yang diinput anggota
+    window.location.href = "gamedomino.html";
+  }
+</script>
+
+  </body>
+</html>

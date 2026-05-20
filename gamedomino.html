@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elastifun - Game Room (Hitungan Edition)</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          rgba(10, 25, 60, 0.9),
+          rgba(10, 25, 60, 0.95)
+        );
+        color: white;
+        padding: 20px;
+      }
+
+      .game-container {
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      /* Top Bar Info */
+      .scoreboard {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(14, 34, 71, 0.95);
+        padding: 15px 25px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .group-info h3 {
+        color: #ffc94a;
+      }
+
+      .score-badge {
+        font-size: 24px;
+        font-weight: bold;
+        background: #d89b14;
+        padding: 5px 15px;
+        border-radius: 10px;
+      }
+
+      /* Meja Hijau Domino */
+      .game-board {
+        background: #1b4d3e;
+        border: 10px solid #113327;
+        border-radius: 30px;
+        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.6);
+        position: relative;
+      }
+
+      .board-title {
+        position: absolute;
+        top: 15px;
+        font-size: 14px;
+        letter-spacing: 2px;
+        color: rgba(255, 255, 255, 0.4);
+        font-weight: bold;
+      }
+
+      /* Gaya Kartu Domino */
+      .domino-card {
+        width: 150px;
+        height: 240px;
+        background: white;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .domino-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 20px rgba(255, 201, 74, 0.4);
+      }
+
+      /* Sisi Atas: Kriteria/Soal (Kuning/Orange) */
+      .domino-top {
+        flex: 1.2;
+        background: #fff3cd;
+        color: #856404;
+        padding: 10px;
+        font-size: 11px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border-bottom: 3px dashed #1b4d3e;
+        line-height: 1.4;
+      }
+
+      /* Sisi Bawah: Jenis/Sifat (Biru) */
+      .domino-bottom {
+        flex: 0.8;
+        background: #cce5ff;
+        color: #004085;
+        padding: 10px;
+        font-size: 13px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      /* Kartu Target di Tengah Meja */
+      .target-card-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .target-card-area .domino-card {
+        cursor: default;
+        pointer-events: none;
+        border: 3px solid #ffc94a;
+        box-shadow: 0 0 20px #ffc94a;
+      }
+
+      /* Area Tangan Pemain / Deck Bawah */
+      .player-deck-section {
+        background: rgba(14, 34, 71, 0.95);
+        padding: 20px;
+        border-radius: 20px;
+        position: relative;
+      }
+
+      .deck-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .turn-indicator {
+        background: #2a7c4b;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      /* Tirai Sensor Keamanan Kartu Ganti Giliran */
+      .deck-wrapper {
+        position: relative;
+        min-height: 260px;
+        display: flex;
+        align-items: center;
+      }
+
+      .cards-hand {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding: 10px 5px;
+        width: 100%;
+        transition: filter 0.3s ease;
+      }
+
+      .cards-hand.hidden-deck {
+        filter: blur(15px);
+        pointer-events: none;
+      }
+
+      .deck-curtain {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(14, 34, 71, 0.8);
+        border-radius: 12px;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 5;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .reveal-btn {
+        background: #ffc94a;
+        color: #0e2247;
+        border: none;
+        padding: 12px 25px;
+        font-size: 15px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+        box-shadow: 0 4px 10px rgba(255, 201, 74, 0.3);
+      }
+
+      /* Tombol Lempar/Pas */
+      .pass-btn {
+        background: #c82333;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .pass-btn:hover {
+        background: #bd2130;
+      }
+
+      /* Modal / Pop-up Box */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+
+      .modal-content {
+        background: #0e2247;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        width: 90%;
+        max-width: 450px;
+        border: 2px solid #ffc94a;
+      }
+
+      .modal-content h3 {
+        margin-bottom: 15px;
+        font-size: 22px;
+        color: #ffc94a;
+      }
+
+      .modal-content p {
+        margin-bottom: 20px;
+        color: #ddd;
+        font-size: 15px;
+        line-height: 1.4;
+      }
+
+      /* Input Ketik Jawaban */
+      .answer-input {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #ccc;
+        margin-bottom: 20px;
+        display: none;
+        background: white;
+        color: black;
+      }
+
+      .modal-btn {
+        background: #d89b14;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .modal-btn:hover {
+        background: #b5800f;
+      }
+
+      /* Responsive Layout khusus HP Landscape */
+      @media screen and (max-height: 480px) and (orientation: landscape) {
+        body { padding: 10px; }
+        .game-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: start; }
+        .scoreboard { grid-column: span 2; padding: 8px 15px; margin-bottom: 5px; }
+        .score-badge { font-size: 18px; padding: 3px 10px; }
+        .game-board { min-height: 220px; padding: 15px; margin-bottom: 0; }
+        .board-title { position: static; font-size: 11px; margin-bottom: 5px; }
+        .domino-card { width: 110px; height: 160px; border-radius: 8px; }
+        .domino-top { font-size: 9px; padding: 5px; }
+        .domino-bottom { font-size: 11px; padding: 5px; }
+        .player-deck-section { padding: 15px; height: 220px; display: flex; flex-direction: column; }
+        .deck-header { margin-bottom: 8px; flex-direction: column; align-items: flex-start; gap: 5px; }
+        .turn-indicator { font-size: 11px; padding: 4px 10px; }
+        .pass-btn { padding: 5px 10px; font-size: 11px; width: 100%; }
+        .deck-wrapper { min-height: 140px; }
+        .cards-hand { flex: 1; align-items: center; padding: 5px 0; }
+        .game-board p { font-size: 10px !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="scoreboard">
+        <div class="group-info">
+          <h3 id="displayKelompok">Kelompok: -</h3>
+          <p id="displayLevel" style="font-size: 13px; color: #aaa">
+            <span id="cardCount">-</span>
+          </p>
+        </div>
+        <div>
+          <span style="font-size: 14px; color: #ccc; margin-right: 10px">SKOR GAME:</span>
+          <span class="score-badge" id="scoreValue">100</span>
+        </div>
+      </div>
+
+      <div class="game-board">
+        <div class="board-title">KARTU UTAMA DI MEJA</div>
+        <div class="target-card-area">
+          <div class="domino-card" id="targetCard">
+            <div class="domino-top" id="targetSoal">Loading...</div>
+            <div class="domino-bottom" id="targetSifat">Loading...</div>
+          </div>
+          <p style="font-size: 13px; color: #ffd35a; font-weight: bold; margin-top: 5px; text-align: center; padding: 0 10px;">
+            Pilih kartu di tanganmu yang memiliki JENIS ELASTISITAS (Biru) cocok untuk kasus di atas, lalu hitung nilainya!
+          </p>
+        </div>
+      </div>
+
+      <div class="player-deck-section">
+        <div class="deck-header">
+          <div>
+            <span class="turn-indicator" id="turnInfo">Giliran: -</span>
+          </div>
+          <button class="pass-btn" onclick="lemparGiliran()">
+            ❌ Pas / Oper Giliran (Skor -10)
+          </button>
+        </div>
+        
+        <div class="deck-wrapper">
+          <div class="deck-curtain" id="deckCurtain">
+            <p id="curtainMessage" style="color: #fff; font-weight: bold;"></p>
+            <button class="reveal-btn" onclick="bukaKunciTirai()">Lihat Kartu Saya 👀</button>
+          </div>
+          
+          <div class="cards-hand" id="cardsHand"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="gameModal">
+      <div class="modal-content">
+        <h3 id="modalTitle">Judul</h3>
+        <p id="modalMessage">Pesan</p>
+        <input
+          type="number"
+          step="0.01"
+          class="answer-input"
+          id="modalInput"
+          placeholder="Gunakan tanda titik (.) untuk desimal"
+        />
+        <button class="modal-btn" id="modalActionBtn" onclick="tutupModal()">
+          Lanjutkan
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // 1. DATA BANK SOAL REVISI TOTAL (20 Soal Akurat)
+      const masterBankDomino = [
+        { id: 1, soal: "Harga naik dari Rp10.000 menjadi Rp12.000 (+20%). Jumlah permintaan turun dari 100 unit menjadi 60 unit (-40%). Berapa nilai Ed?", koefisien: 2, sifat: "Elastis (E > 1)" },
+        { id: 2, soal: "Harga barang turun 10%, mengakibatkan jumlah penawaran barang tersebut berkurang sebesar 5%. Berapa nilai Es?", koefisien: 0.5, sifat: "Inelastis (E < 1)" },
+        { id: 3, soal: "Harga baju naik dari Rp50.000 menjadi Rp60.000 (+20%). Jumlah permintaan turun dari 50 unit menjadi 40 unit (-20%). Berapa nilai Ed?", koefisien: 1, sifat: "Uniter / Normal (E = 1)" },
+        { id: 4, soal: "Saat harga Rp4.000, kuantitas 10 unit. Harga naik menjadi Rp6.000 (+50%), kuantitas turun menjadi 2 unit (-80%). Berapa nilai Ed?", koefisien: 1.6, sifat: "Elastis (E > 1)" },
+        { id: 5, soal: "Persentase perubahan harga sebesar 15% menyebabkan perubahan jumlah barang yang ditawarkan sebesar 15%. Berapa nilai Es?", koefisien: 1, sifat: "Uniter / Normal (E = 1)" },
+        { id: 6, soal: "Harga beras naik dari Rp12.000 ke Rp15.000 (+25%). Permintaan hanya turun dari 100 kg ke 95 kg (-5%). Berapa nilai Ed?", koefisien: 0.2, sifat: "Inelastis (E < 1)" },
+        { id: 7, soal: "Harga sebuah gadget turun sebesar 20%, menyebabkan jumlah permintaan melonjak sebesar 50%. Berapa koefisien Ed?", koefisien: 2.5, sifat: "Elastis (E > 1)" },
+        { id: 8, soal: "Bila harga sepotong roti naik 30%, jumlah penawaran roti tersebut meningkat tajam sebanyak 60%. Berapa koefisien Es?", koefisien: 2, sifat: "Elastis (E > 1)" },
+        { id: 9, soal: "Harga bensin naik dari Rp10.000 menjadi Rp11.000 (+10%), namun jumlah konsumsi masyarakat tidak berubah sama sekali (0%). Berapa Ed?", koefisien: 0, sifat: "Inelastis Sempurna (E = 0)" },
+        { id: 10, soal: "Suatu barang memiliki perubahan harga 8%, dan menyebabkan perubahan jumlah permintaan sebesar 4%. Berapa nilai Ed?", koefisien: 0.5, sifat: "Inelastis (E < 1)" },
+        { id: 11, soal: "Harga produk X turun 5%, jumlah permintaan meningkat 5%. Berapa koefisien elastisitasnya?", koefisien: 1, sifat: "Uniter / Normal (E = 1)" },
+        { id: 12, soal: "Harga tiket bioskop turun dari Rp50.000 menjadi Rp40.000 (-20%). Jumlah penonton naik dari 200 orang menjadi 320 orang (+60%). Berapa Ed?", koefisien: 3, sifat: "Elastis (E > 1)" },
+        { id: 13, soal: "Harga pupuk bersubsidi naik 50%, menyebabkan jumlah penawaran pertanian naik sedikit saja yaitu sebesar 10%. Berapa Es?", koefisien: 0.2, sifat: "Inelastis (E < 1)" },
+        { id: 14, soal: "Kenaikan harga garam sebesar 25% hanya mengurangi jumlah pembelian konsumen sebesar 5%. Hitung koefisien Ed-nya!", koefisien: 0.2, sifat: "Inelastis (E < 1)" },
+        { id: 15, soal: "Harga laptop naik dari Rp8.000.000 menjadi Rp10.000.000 (+25%). Jumlah penawaran naik dari 100 unit menjadi 150 unit (+50%). Berapa Es?", koefisien: 2, sifat: "Elastis (E > 1)" },
+        { id: 16, soal: "Perubahan harga laptop sebesar 12% memicu penurunan kuantitas permintaan sebesar 18%. Berapa nilai Ed?", koefisien: 1.5, sifat: "Elastis (E > 1)" },
+        { id: 17, soal: "Harga sabun mandi naik 10%, jumlah permintaan sabun tersebut turun 8%. Berapakah koefisien Ed?", koefisien: 0.8, sifat: "Inelastis (E < 1)" },
+        { id: 18, soal: "Harga minyak goreng naik dari Rp15.000 ke Rp18.000 (+20%). Jumlah permintaan turun dari 50 liter ke 46 liter (-8%). Berapa Ed?", koefisien: 0.4, sifat: "Inelastis (E < 1)" },
+        { id: 19, soal: "Pada tingkat harga tertentu yang stagnan (0%), produsen bersedia menyuplai barang dalam jumlah tak terhingga (%ΔQ = tak terhingga). Berapa Es?", koefisien: 999, sifat: "Elastis Sempurna (E = ~)" },
+        { id: 20, soal: "Harga obat resep naik 40%, namun jumlah obat yang wajib dibeli pasien tetap sama stabil (%ΔQ = 0%). Berapakah nilai Ed?", koefisien: 0, sifat: "Inelastis Sempurna (E = 0)" }
+      ];
+
+      // 2. STATE KONTROL SENSOR & DATA
+      let namaKelompok = localStorage.getItem("namaKelompok") || "Kelompok Maju Jaya";
+      let anggotaKelompok = JSON.parse(localStorage.getItem("anggotaKelompok")) || ["Andi", "Budi", "Cici", "Dedi", "Elsa"];
+
+      let gameSessionCards = [];
+      let kartuTarget = null;
+      let kartuTangan = [];
+      let skor = 100;
+      let indeksTurn = 0;
+      let indeksKartuDipilihSaatIni = null;
+
+      window.onload = function () {
+        document.getElementById("displayKelompok").innerText = "Kelompok: " + namaKelompok;
+        initGame();
+      };
+
+      // 3. SELEKSI ACAK TOTAL (Fisher-Yates)
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      function initGame() {
+        skor = 100;
+        indeksTurn = 0;
+        document.getElementById("scoreValue").innerText = skor;
+
+        let masterCopy = [...masterBankDomino];
+        let shuffledMaster = shuffleArray(masterCopy);
+        gameSessionCards = shuffledMaster.slice(0, 10);
+
+        kartuTarget = gameSessionCards[0];
+        let sisaKartu = gameSessionCards.slice(1);
+        kartuTangan = shuffleArray(sisaKartu);
+
+        updateTampilanMeja();
+        updateTampilanTangan();
+        updateInfoTurn();
+      }
+
+      function updateTampilanMeja() {
+        document.getElementById("targetSoal").innerText = kartuTarget.soal;
+        document.getElementById("targetSifat").innerText = kartuTarget.sifat;
+      }
+
+      function updateInfoTurn() {
+        let sisaKartu = kartuTangan.length;
+        let tierLevel = "Rookie";
+
+        if (sisaKartu >= 7) { tierLevel = "Legend 👑"; }
+        else if (sisaKartu >= 4) { tierLevel = "Pro 🔥"; }
+        else { tierLevel = "Rookie 🔰"; }
+
+        document.getElementById("turnInfo").innerText = "⭐ Giliran: " + anggotaKelompok[indeksTurn];
+        document.getElementById("cardCount").innerHTML = `Sisa: ${sisaKartu} Kartu <b style="color: #ffc94a; margin-left: 8px;">[ ${tierLevel} ]</b>`;
+      }
+
+      // 4. UPDATE KARTU DENGAN REDIRECT KE TRANSISI COCOLOGI INDIVIDU
+      function updateTampilanTangan() {
+        const container = document.getElementById("cardsHand");
+        container.innerHTML = "";
+
+        // KONDISI SELESAI GAME: REDIRECT KE TRANSISI COCOLOGI INDIVIDU
+        if (kartuTangan.length === 0) {
+          tampilkanModalNormal(
+            "🎉 TANTANGAN DOMINO SELESAI!",
+            `Selamat Kelompok <b>${namaKelompok}</b>! Semua kartu domino berhasil tersambung secara akurat.<br>Skor Akhir Kelompok: <b>${skor}</b>.<br><br>Sekarang bersiaplah, kalian akan maju ke babak penentuan mandiri!`
+          );
+          
+          const actionBtn = document.getElementById("modalActionBtn");
+          actionBtn.innerText = "Lanjut ke Tahap Individu ➔";
+
+          // KONDISI SELESAI GAME: REDIRECT KE TRANSISI COCOLOGI INDIVIDU
+if (kartuTangan.length === 0) {
+  tampilkanModalNormal(
+    "🎉 TANTANGAN DOMINO SELESAI!",
+    `Selamat Kelompok <b>${namaKelompok}</b>! Semua kartu domino berhasil tersambung secara akurat.<br>Skor Akhir Kelompok: <b>${skor}</b>.<br><br>Sekarang bersiaplah, kalian akan maju ke babak penentuan mandiri!`
+  );
+  
+  const actionBtn = document.getElementById("modalActionBtn");
+  actionBtn.innerText = "Lanjut ke Tahap Individu ➔";
+  
+  // BEGITU TOMBOL DI MODAL DIKLIK, LANGSUNG LOMPAT KE SINI:
+  actionBtn.onclick = function () {
+    localStorage.setItem("skorDomino", skor); // Mengamankan skor kelompok ke storage
+    window.location.href = "transisi-cocologi.html"; // Jembatan otomatis ke halaman transisi
+  };
+  return;
+}
+
+          actionBtn.onclick = function () {
+            localStorage.setItem("skorDomino", skor); // Amankan skor kelompok ke storage
+            window.location.href = "transisi-cocologi.html"; // Lompat ke halaman transisi
+          };
+          return;
+        }
+
+        kartuTangan.forEach((kartu, index) => {
+          const cardDiv = document.createElement("div");
+          cardDiv.className = "domino-card";
+          cardDiv.onclick = () => bukaFormJawaban(index);
+          cardDiv.innerHTML = `
+            <div class="domino-top">${kartu.soal}</div>
+            <div class="domino-bottom">${kartu.sifat}</div>
+          `;
+          container.appendChild(cardDiv);
+        });
+      }
+
+      // 5. SISTEM SENSOR KARTU UNTUK KEAMANAN OPER HP
+      function pasangTiraiSensor() {
+        const curtain = document.getElementById("deckCurtain");
+        const hand = document.getElementById("cardsHand");
+        
+        document.getElementById("curtainMessage").innerHTML = `HP HARUS DIOPER!<br>Sekarang giliran <b>${anggotaKelompok[indeksTurn]}</b>.`;
+        
+        hand.classList.add("hidden-deck");
+        curtain.style.display = "flex";
+      }
+
+      function bukaKunciTirai() {
+        document.getElementById("deckCurtain").style.display = "none";
+        document.getElementById("cardsHand").classList.remove("hidden-deck");
+      }
+
+      // 6. VALIDASI JAWABAN
+      function bukaFormJawaban(indexKartu) {
+        indeksKartuDipilihSaatIni = indexKartu;
+        const kartuPilihan = kartuTangan[indexKartu];
+
+        document.getElementById("modalTitle").innerText = "✍️ Hitung & Hubungkan Kartu";
+        document.getElementById("modalMessage").innerHTML = `
+          Anda memilih kartu bersifat <b>${kartuPilihan.sifat}</b>.<br><br>
+          Selesaikan hitungan pada kartu ini:<br>
+          <i>"${kartuPilihan.soal}"</i>
+        `;
+
+        const inputField = document.getElementById("modalInput");
+        inputField.style.display = "block";
+        inputField.value = "";
+        
+        setTimeout(() => { inputField.focus(); }, 100);
+
+        const actionBtn = document.getElementById("modalActionBtn");
+        actionBtn.innerText = "Kirim Jawaban";
+        actionBtn.onclick = validasiJawabanKetik;
+
+        document.getElementById("gameModal").style.display = "flex";
+      }
+
+      function validasiJawabanKetik() {
+        const inputUser = parseFloat(document.getElementById("modalInput").value);
+        const kartuPilihan = kartuTangan[indeksKartuDipilihSaatIni];
+
+        if (isNaN(inputUser)) {
+          alert("Harap masukkan angka jawaban terlebih dahulu!");
+          return;
+        }
+
+        document.getElementById("modalInput").style.display = "none";
+        const apakahHitunganBenar = inputUser === kartuPilihan.koefisien;
+
+        if (apakahHitunganBenar) {
+          skor += 20;
+          document.getElementById("scoreValue").innerText = skor;
+
+          kartuTarget = kartuPilihan;
+          kartuTangan.splice(indeksKartuDipilihSaatIni, 1);
+
+          tampilkanModalNormal(
+            "✅ JAWABAN BENAR (+20)",
+            `Hebat! ${anggotaKelompok[indeksTurn]} menjawab dengan tepat (${inputUser}) dan kartu berhasil tersambung!`
+          );
+
+          gantiGiliran();
+          updateTampilanMeja();
+          updateTampilanTangan();
+          if(kartuTangan.length > 0) pasangTiraiSensor(); // Sensor aktif jika game belum tamat
+        } else {
+          skor -= 5;
+          if (skor < 0) skor = 0;
+          document.getElementById("scoreValue").innerText = skor;
+
+          kartuTangan = shuffleArray(kartuTangan);
+
+          tampilkanModalNormal(
+            "❌ HITUNGAN SALAH (-5)",
+            `Waduh, hasil hitungan kurang tepat. Sisa kartu di tangan kelompok diacak kembali! Silakan berdiskusi ulang.`
+          );
+          updateTampilanTangan();
+        }
+      }
+
+      // 7. OPER GILIRAN / SKIP
+      function lemparGiliran() {
+        skor -= 10;
+        if (skor < 0) skor = 0;
+        document.getElementById("scoreValue").innerText = skor;
+
+        const muridSekarang = anggotaKelompok[indeksTurn];
+        gantiGiliran();
+        
+        tampilkanModalNormal(
+          "🔄 GILIRAN DILEMPAR (-10)",
+          `${muridSekarang} mengoper giliran berpikir kepada <b>${anggotaKelompok[indeksTurn]}</b>.`
+        );
+        
+        updateTampilanTangan();
+        pasangTiraiSensor();
+      }
+
+      function gantiGiliran() {
+        indeksTurn = (indeksTurn + 1) % anggotaKelompok.length;
+        updateInfoTurn();
+      }
+
+      function tampilkanModalNormal(title, msg) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerHTML = msg;
+        document.getElementById("modalInput").style.display = "none";
+
+        const actionBtn = document.getElementById("modalActionBtn");
+        actionBtn.innerText = "Lanjutkan";
+        actionBtn.onclick = tutupModal;
+
+        document.getElementById("gameModal").style.display = "flex";
+      }
+
+      function tutupModal() {
+        document.getElementById("gameModal").style.display = "none";
+      }
+    </script>
+  </body>
+</html>

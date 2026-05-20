@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ELASTIFUN - PANDUAN</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background:
+          linear-gradient(rgba(10, 25, 60, 0.75), rgba(10, 25, 60, 0.85)),
+          url("bgpanduan.jpg.jpg");
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+
+        font-family: Arial, sans-serif;
+        color: white;
+
+        min-height: 100vh;
+        padding: 20px; /* Dikurangi dari 30px agar lebih lega di HP */
+
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 800px; /* Disesuaikan sedikit agar nyaman dibaca */
+        margin: 0 auto;
+      }
+
+      .badge {
+        width: fit-content;
+        background: #d49615;
+        padding: 10px 22px;
+        border-radius: 40px;
+        margin: 0 auto; /* Diperbaiki penulisan margin center */
+        font-weight: bold;
+        font-size: 13px; /* Proporsional untuk HP dan PC */
+      }
+
+      .title {
+        text-align: center;
+        margin-top: 30px; /* Dikurangi dari 60px agar tidak terlalu turun di HP */
+      }
+
+      .title h1 {
+        font-size: 32px; /* Dioptimalkan dari 60px agar tidak tumpang tindih di HP */
+        font-family: Georgia, "Times New Roman", Times, serif;
+        line-height: 1.2;
+      }
+
+      .subtitle {
+        color: #d8d8d8;
+        margin-top: 8px;
+        font-size: 14px;
+      }
+
+      .welcome {
+        text-align: center;
+        margin-top: 20px;
+        color: #d4d4d4;
+        font-size: 18px;
+      }
+
+      .welcome span {
+        color: #ffc84a;
+        font-weight: bold;
+      }
+
+      .card {
+        background: rgba(16, 43, 92, 0.9);
+        border-left: 6px solid #d49615;
+        border-radius: 15px; /* Disesuaikan dari 20px */
+        padding: 25px; /* Dikurangi dari 35px agar konten di HP tidak terlalu sempit */
+        margin-top: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .card h2,
+      .card h3,
+      .card h4 {
+        color: #ffc84a;
+        margin-bottom: 12px;
+        font-size: 18px; /* Ukuran heading card yang seragam dan ramah HP */
+      }
+
+      .card p,
+      .step,
+      .list-materi {
+        line-height: 1.6; /* Dioptimalkan dari 1.8 / 2 agar seimbang di HP */
+        color: #e4e4e4;
+        font-size: 14px; /* Standar teks bacaan HP yang nyaman */
+      }
+
+      /* Gaya teks untuk list panduan agar rapi ke bawah */
+      .step br,
+      .list-materi br {
+        margin-bottom: 8px;
+        display: block;
+        content: "";
+      }
+
+      .btn-next {
+        display: block;
+        width: 100%; /* Lebar penuh di HP agar mudah ditekan jempol */
+        max-width: 250px;
+        margin: 30px auto;
+        background: #d49615;
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s ease;
+        text-align: center;
+      }
+
+      .btn-next:hover {
+        background: #efad20;
+        transform: scale(1.03);
+      }
+
+      .btn-next:active {
+        transform: scale(0.98);
+      }
+
+      /* Responsive Adjustment untuk PC / Layar yang lebih besar */
+      @media (min-width: 600px) {
+        .title h1 {
+          font-size: 42px;
+        }
+        .card h2,
+        .card h3,
+        .card h4 {
+          font-size: 22px;
+        }
+        .card p,
+        .step,
+        .list-materi {
+          font-size: 15px;
+        }
+        body {
+          padding: 40px 30px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="badge">📖 BUKU PANDUAN</div>
+
+      <div class="title">
+        <h1>Selamat Datang di Elastifun!</h1>
+        <div class="subtitle">Game Domino Materi Elastisitas</div>
+      </div>
+
+      <div class="welcome">Hai, <span id="namauser">Pemain</span> 👋</div>
+
+      <div class="card">
+        <h2>📌 Tentang Game ELASTIFUN</h2>
+        <p>
+          ELASTIFUN merupakan game edukasi berbasis domino yang dirancang untuk
+          membantu memahami materi elastisitas ekonomi secara menyenangkan,
+          interaktif, dan menantang.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>🃏 Cara Bermain</h2>
+        <div class="step">
+          1. Masuk menggunakan Nama Lengkap dan Nomor Absen.<br />
+          2. Baca panduan permainan dengan cermat sebelum memulai game.<br />
+          3. Pastikan tempat duduk sudah berkumpul dengan kelompok
+          masing-masing.<br />
+          4. Pelajari materi elastisitas terlebih dahulu dan jangan lupa
+          mencatat poin penting.<br />
+          5. Dengarkan dan pahami video rumus yang sudah diberikan.<br />
+          6. Mulai memainkan game domino dengan menyusun kartu domino dengan
+          jawaban yang benar dan tepat.<br />
+          7. Selesaikan setiap level untuk mengumpulkan poin sebanyak
+          mungkin.<br />
+          8. Setelah game domino selesai, akan ada game seru lainnya untuk
+          menambah poin kalian.<br />
+          9. Game selanjutnya, setiap pemain akan bermain secara individu, jadi
+          persiapkan dirimu dengan baik.<br />
+          10. Tetap semangat, fokus, dan percaya diri untuk mendapatkan skor
+          sebanyak-banyaknya.<br />
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🁅 Jenis Kartu Domino</h3>
+        <div class="list-materi">
+          🔵 Kartu Biru: Elastisitas Harga Permintaan (Ed).<br />
+          🟣 Kartu Ungu: Strategi Harga Perusahaan.<br />
+          🟠 Kartu Oranye: Elastisitas Silang (Exy).<br />
+          🔴 Kartu Merah: Elastisitas Pendapatan (Ey).<br />
+          🟢 Kartu Hijau: Revenue Implication.<br />
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>🎴 Kartu Tebakan Gambar</h4>
+        <div class="list-materi">
+          1. Kartu Pengertian dan Konsep Dasar Elastisitas.<br />
+          2. Kartu Rumus Elastisitas.<br />
+          3. Kartu Strategi Harga Perusahaan.<br />
+          4. Tugasmu adalah menebak dan memilih pasangan kartu jawaban yang
+          paling tepat.<br />
+          5. Perhatikan setiap kartu dengan teliti karena game ini membutuhkan
+          konsentrasi dan daya ingat yang kuat.<br />
+          6. <strong>INGAT!</strong> Setiap jawaban harus tepat dan benar agar
+          kamu bisa mendapat tambahan poin yang maksimal.<br />
+        </div>
+      </div>
+
+      <button class="btn-next" onclick="mulaigame()">Lanjut Panduan ▶️</button>
+    </div>
+
+    <script>
+      // MODIFIKASI: Menyesuaikan kunci localStorage 'namaSiswa' dari halaman login awal
+      const nama = localStorage.getItem("namaSiswa");
+      const nomorAbsen = localStorage.getItem("noAbsen");
+
+      if (nama && nomorAbsen) {
+        document.getElementById("namauser").innerText =
+          `${nama} (Absen ${nomorAbsen})`;
+      } else if (nama) {
+        document.getElementById("namauser").innerText = nama;
+      } else {
+        document.getElementById("namauser").innerText = "Pemain";
+      }
+
+      function mulaigame() {
+        // Mengarah ke halaman panduan selanjutnya sesuai dengan kodemu
+        window.location.href = "halaman2-panduan.html";
+      }
+    </script>
+  </body>
+</html>

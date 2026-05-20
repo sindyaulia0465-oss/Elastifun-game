@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading - ELASTIFUN</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #17325d;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        min-height: 100vh; /* Menggunakan min-height agar fleksibel di HP */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px; /* Padding aman untuk layar kecil */
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      h1 {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 45px; /* Disesuaikan dari 60px agar tidak overflow di HP portrait */
+        margin-bottom: 10px;
+      }
+
+      p {
+        color: #d6d6d6;
+        margin-bottom: 30px;
+        font-size: 16px; /* Sedikit dikecilkan agar pas di HP */
+      }
+
+      .loader {
+        width: 70px; /* Disesuaikan dari 90px agar lebih proporsional di HP */
+        height: 70px;
+        border: 6px solid rgba(255, 255, 255, 0.15);
+        border-top: 6px solid #d59616;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 25px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .dot {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+      }
+
+      .dot span {
+        width: 10px;
+        height: 10px;
+        background-color: #d59616;
+        border-radius: 50%;
+        animation: bounce 1.5s infinite;
+      }
+
+      .dot span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .dot span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+          opacity: 1;
+        }
+      }
+
+      .text {
+        font-size: 16px; /* Disesuaikan dari 20px */
+        color: #b8c3d6;
+        line-height: 1.4;
+      }
+
+      /* Media Query khusus untuk HP berspesifikasi layar sangat kecil */
+      @media (max-width: 360px) {
+        h1 {
+          font-size: 36px;
+        }
+        p {
+          font-size: 14px;
+        }
+        .text {
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>ELASTIFUN</h1>
+      <p>Memuat Panduan</p>
+      <div class="loader"></div>
+      <div class="dot">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="text" id="loadingText">Menyiapkan data pemain...</div>
+    </div>
+
+    <script>
+      // Mengambil nama siswa dari localStorage yang diisi di index.html
+      const namaSiswa = localStorage.getItem("namaSiswa") || "Siswa";
+
+      // Mengubah teks loading agar lebih personal
+      document.getElementById("loadingText").innerText =
+        `Halo ${namaSiswa}, menyiapkan data permainanmu...`;
+
+      // Delay 3 detik lalu pindah ke halaman panduan sesuai kodemu
+      setTimeout(function () {
+        window.location.href = "halaman1-panduan.html";
+      }, 3000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,206 @@
+﻿<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ELASTIFUN</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body,
+      html {
+        width: 100%;
+        height: 100%;
+        /* Menghapus overflow hidden agar layar HP yang pendek bisa di-scroll jika keyboard muncul */
+        overflow-x: hidden;
+      }
+
+      body {
+        background-image: url("bg.jpg.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        font-family: Arial, sans-serif;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px; /* Tambahan padding luar untuk layar HP */
+      }
+
+      .card {
+        background-color: rgba(30, 58, 95, 0.9);
+        width: 100%; /* Ubah ke 100% agar fleksibel di layar kecil */
+        max-width: 450px;
+        padding: 35px 25px; /* Sedikit dikecilkan untuk space di HP */
+        text-align: center;
+        color: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        z-index: 10;
+      }
+
+      .badge {
+        background-color: #c98910;
+        display: inline-block;
+        padding: 8px 18px;
+        border-radius: 50px;
+        font-size: 11px; /* Sedikit disesuaikan untuk HP */
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+      }
+
+      h1 {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 32px; /* Dioptimalkan dari 36px agar tidak patah berantakan di HP */
+        line-height: 1.1;
+        margin-bottom: 15px;
+      }
+
+      p {
+        font-size: 13px; /* Disesuaikan untuk HP */
+        line-height: 1.6;
+        color: #d1d1d1;
+        margin-bottom: 25px;
+      }
+
+      /* Wadah Input Group untuk estetika */
+      .input-group {
+        text-align: left;
+        margin-bottom: 15px;
+      }
+
+      .input-group label {
+        display: block;
+        font-size: 11px;
+        color: #ffc94a;
+        margin-bottom: 5px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        outline: none;
+        font-size: 15px;
+        transition: border-color 0.3s;
+      }
+
+      input:focus {
+        border-color: #c98910;
+      }
+
+      .btn-start {
+        width: 100%;
+        padding: 15px;
+        border-radius: 10px;
+        border: none;
+        background-color: #c98910;
+        color: white;
+        font-size: 16px; /* Dioptimalkan untuk kegunaan jempol di HP */
+        font-weight: bold;
+        cursor: pointer;
+        transition:
+          background-color 0.3s,
+          transform 0.1s;
+        margin-top: 10px;
+      }
+
+      .btn-start:hover {
+        background-color: #e09a14;
+      }
+
+      .btn-start:active {
+        transform: scale(0.98); /* Efek tekan di HP */
+      }
+
+      /* Media Query khusus HP layar sangat kecil */
+      @media (max-width: 360px) {
+        h1 {
+          font-size: 28px;
+        }
+        .card {
+          padding: 25px 15px;
+        }
+        .badge {
+          font-size: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <div class="badge">GAME DOMINO MATERI Elastisitas</div>
+
+      <h1>ELASTIFUN</h1>
+
+      <p>
+        Belajar Elastisitas Harga, Pendapatan, dan Strategi Harga Melalui Game
+        Interaktif
+      </p>
+
+      <div class="input-group">
+        <label for="nama">Nama Lengkap Siswa</label>
+        <input
+          type="text"
+          id="nama"
+          placeholder="Masukkan Nama Lengkap Kamu....."
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="input-group">
+        <label for="absen">Nomor Absen</label>
+        <input
+          type="number"
+          id="absen"
+          placeholder="Contoh: 09"
+          min="1"
+          max="50"
+        />
+      </div>
+
+      <button class="btn-start" onclick="StartGame()">Mulai Game</button>
+    </div>
+
+    <script>
+      function StartGame() {
+        const nama = document.getElementById("nama").value;
+        const absen = document.getElementById("absen").value;
+
+        if (nama.trim() === "") {
+          alert("Nama tidak boleh kosong!");
+          return;
+        }
+
+        if (absen.trim() === "") {
+          alert("Nomor absen tidak boleh kosong!");
+          return;
+        }
+
+        // Menyimpan data asli siswa ke memori browser
+        localStorage.setItem("namaSiswa", nama.trim());
+        localStorage.setItem("noAbsen", absen.trim());
+
+        // Pindah ke file loading.html bawaanmu
+        window.location.href = "loading.html";
+      }
+    </script>
+  </body>
+</html>

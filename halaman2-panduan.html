@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ELASTIFUN - Persiapan Belajar</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        background:
+          linear-gradient(rgba(10, 25, 60, 0.85), rgba(10, 25, 60, 0.9)),
+          url("bgmateri.jpg.png");
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+
+        color: white;
+        padding: 20px; /* Dikurangi dari 40px agar pas di HP */
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .badge {
+        background: #d89b14;
+        display: inline-block;
+        padding: 8px 22px;
+        border-radius: 50px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        font-size: 12px;
+      }
+
+      .header h1 {
+        font-size: 36px; /* Dioptimalkan dari 60px agar tidak pecah di HP */
+        font-family: Georgia, "Times New Roman", Times, serif;
+      }
+
+      .welcome {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #ddd;
+      }
+
+      .welcome span {
+        color: #ffc94a;
+        font-weight: bold;
+      }
+
+      /* KUNCI RESPONSIF: Diatur bertumpuk vertikal pada HP, dan menyamping di PC */
+      .card-wrapper {
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        gap: 25px;
+        width: 100%;
+        max-width: 550px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .card {
+        width: 100%;
+        min-height: auto;
+        background: rgba(14, 34, 71, 0.92);
+        border-radius: 25px;
+        padding: 25px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        transition: all 0.5s ease;
+      }
+
+      .card h2 {
+        color: #ffc94a;
+        margin-bottom: 20px;
+        font-size: 22px;
+      }
+
+      .card p {
+        line-height: 1.6;
+        color: #ddd;
+        font-size: 14px;
+      }
+
+      .check-item {
+        background: rgba(255, 255, 255, 0.08);
+        margin-bottom: 12px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        font-size: 14px;
+        line-height: 1.4;
+        text-align: left;
+      }
+
+      .btn {
+        width: 100%;
+        border: none;
+        padding: 15px;
+        border-radius: 12px;
+        background: #d89b14;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: 0.2s;
+      }
+
+      .btn:hover {
+        background: #fcb316;
+      }
+
+      /* LOGIKA TRANSISI DI HP: Menyembunyikan card yang tidak aktif agar tidak berantakan ke bawah */
+      .material-card {
+        display: none; /* Sembunyikan default */
+        opacity: 0;
+        transform: translateY(300px);
+      }
+
+      .material-card.active {
+        display: block; /* Munculkan saat aktif */
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .preparation-card.inactive {
+        display: none; /* Sembunyikan card persiapan jika materi dibuka */
+      }
+
+      .material-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: none;
+        width: 100%;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        color: white;
+        text-align: left;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .material-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .material-title {
+        font-weight: bold;
+        color: #ffc94a;
+        font-size: 15px;
+        margin-bottom: 2px;
+      }
+
+      .back-btn {
+        background: #233b67;
+      }
+
+      .game-btn {
+        background: #8a2be2;
+      }
+
+      .game-btn:hover {
+        background: #9d4edd;
+      }
+
+      /* MEDIA QUERY: Mengaktifkan mode animasi geser menyamping khusus di LAYAR BESAR (PC/Tablet) */
+      @media (min-width: 900px) {
+        body { padding: 40px; }
+        .header h1 { font-size: 55px; }
+        .welcome { font-size: 20px; }
+        
+        .card-wrapper {
+          flex-direction: row;
+          max-width: 1100px;
+          justify-content: center;
+          align-items: flex-start;
+          overflow: hidden;
+          padding: 10px;
+        }
+
+        .card {
+          width: 500px;
+          min-height: 540px;
+        }
+
+        .material-card {
+          display: block; /* Selalu render di desktop untuk efek slide */
+          opacity: 0.3;
+          transform: translateX(100px);
+          pointer-events: none;
+        }
+
+        .material-card.active {
+          opacity: 1;
+          transform: translateX(0);
+          pointer-events: auto;
+        }
+
+        .preparation-card.inactive {
+          display: block;
+          transform: translateX(-100px);
+          opacity: 0.3;
+          pointer-events: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="badge">📚 PERSIAPAN BELAJAR</div>
+        <h1>ELASTIFUN</h1>
+        <div class="welcome">Hai, <span id="namauser">Pemain</span></div>
+      </div>
+    </div>
+
+    <div class="card-wrapper">
+      <div class="card preparation-card" id="prepCard">
+        <h2>🎒 Persiapan Sebelum Belajar</h2>
+
+        <div class="check-item">📢 Mempelajari Materi Dengan Baik</div>
+        <div class="check-item">🎮 Menyelesaikan Tantangan Game</div>
+        <div class="check-item">
+          📝 Jangan Lupa Catat Hal Penting. Tiap Materi Ada Clue Jawaban!
+        </div>
+
+        <button class="btn" onclick="siapbelajar()">Saya Siap Belajar! ➔</button>
+        <button class="btn game-btn" onclick="Mulaigame()">🎮 Mulai Game Domino</button>
+      </div>
+
+      <div class="card material-card" id="materialCard">
+        <h2>📖 Pilihan Materi</h2>
+
+        <button class="material-btn" onclick="MateriElastisitasHargaPermintaan()">
+          <div class="material-title">Elastisitas Harga Permintaan</div>
+          Mempelajari Konsep Rumus Ed
+        </button>
+
+        <button class="material-btn" onclick="MateriElastisitasPendapatan()">
+          <div class="material-title">Elastisitas Pendapatan</div>
+          Barang Inferior, Murah, dan Normal
+        </button>
+
+        <button class="material-btn" onclick="ElastisitasSilangdanSubstitusi()">
+          <div class="material-title">Elastisitas Silang dan Substitusi</div>
+          Mempelajari Konsep dan Contoh Barang
+        </button>
+
+        <button class="material-btn" onclick="ArcvsPointElasticity()">
+          <div class="material-title">Arc vs Point Elasticity</div>
+          Perbedaan Elastisitas Busur dan Titik
+        </button>
+
+        <button class="material-btn" onclick="RevenueImplication()">
+          <div class="material-title">Revenue Implication</div>
+          Implikasi Pendapatan terhadap Produsen
+        </button>
+
+        <button class="material-btn" onclick="StrategiHargaPerusahaan()">
+          <div class="material-title">Strategi Harga Perusahaan</div>
+          Kebijakan Penetapan Harga Strategis
+        </button>
+
+        <button class="btn back-btn" onclick="kembalipersiapan()">
+          ⇤ Kembali ke Persiapan
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // SINKRONISASI DATA PEMAIN KELAS
+      const nama = localStorage.getItem("namaSiswa");
+      const nomorAbsen = localStorage.getItem("noAbsen");
+
+      if (nama && nomorAbsen) {
+        document.getElementById("namauser").innerText = `${nama} (Absen ${nomorAbsen})`;
+      } else if (nama) {
+        document.getElementById("namauser").innerText = nama;
+      } else {
+        document.getElementById("namauser").innerText = "Pemain";
+      }
+
+      function siapbelajar() {
+        document.getElementById("materialCard").classList.add("active");
+        document.getElementById("prepCard").classList.add("inactive");
+      }
+
+      function kembalipersiapan() {
+        document.getElementById("materialCard").classList.remove("active");
+        document.getElementById("prepCard").classList.remove("inactive");
+      }
+
+      // Kumpulan fungsi rute halaman materi Anda
+      function MateriElastisitasHargaPermintaan() { window.location.href = "materi1.html"; }
+      function MateriElastisitasPendapatan() { window.location.href = "materi2.html"; }
+      function ElastisitasSilangdanSubstitusi() { window.location.href = "materi3.html"; }
+      function ArcvsPointElasticity() { window.location.href = "materi4.html"; }
+      function RevenueImplication() { window.location.href = "materi5.html"; }
+      function StrategiHargaPerusahaan() { window.location.href = "materi6.html"; }
+      function Mulaigame() { window.location.href = "halaman3-mulaigame.html"; }
+    </script>
+  </body>
+</html>
